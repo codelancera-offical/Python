@@ -12,10 +12,11 @@ def get_ip_on_linux():
     else:
         return "No IP address found for wlan0"
     
-def connect_to_termux():
+def connect_to_termux(host=None):
     private_key_path = r"C:\Users\30752\.ssh\id_rsa"
     username = "u0_a53"
-    host = input("please enter termux's ip: ")
+    if host == None:
+        host = input("please enter termux's ip: ")
     port = 8022
 
     # build ssh connect command
