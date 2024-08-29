@@ -3,6 +3,7 @@ import psutil
 import shutil
 from tabulate import tabulate
 
+
 def get_gpu_usage():
     """Get GPU usage statistics."""
     gpus = GPUtil.getGPUs()
@@ -17,7 +18,7 @@ def get_gpu_usage():
         })
     return gpu_data
 
-def get_memory_usage():
+def get_memory_usage(): # Termux can only run this
     """Get memory usage statistics."""
     memory_info = psutil.virtual_memory()
     return {
