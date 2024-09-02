@@ -20,7 +20,7 @@ def print_slowly(text=None, color="white", delay=0.05):
         "reset": Style.RESET_ALL
     }
 
-    color_code = color_map.get(color.lower(), Fore.White)   # default is white
+    color_code = color_map.get(color.lower(), Fore.WHITE)   # default is white
     sys.stdout.write(color_code)
     sys.stdout.flush()
 
