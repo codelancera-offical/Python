@@ -1,5 +1,6 @@
 import subprocess
 import re
+import socket
 
 def get_ip_on_linux():
     result = subprocess.run(['ifconfig'], capture_output=True, text=True)
@@ -11,6 +12,7 @@ def get_ip_on_linux():
         return match.group(1)
     else:
         return "No IP address found for wlan0"
+
     
 def connect_to_termux(host=None):
     private_key_path = r"C:\Users\30752\.ssh\id_rsa"
@@ -32,6 +34,8 @@ def connect_to_termux(host=None):
     except subprocess.CalledProcessError as e:
         print(f"SSH connect failed: {e}")
     
+def get_ip_range(interface='wlan0'):
+    pass
 def main():
     functions = {
         "0": get_ip_on_linux,
