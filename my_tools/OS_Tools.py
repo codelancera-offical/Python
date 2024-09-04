@@ -1,8 +1,12 @@
 import GPUtil
 import psutil
 import shutil
+import os
+import sys
+import subprocess
 from tabulate import tabulate
 
+# computer status tools
 def get_gpu_usage():
     """Get GPU usage statistics."""
     gpus = GPUtil.getGPUs()
@@ -56,8 +60,8 @@ def get_disk_usage():
             continue
     return disk_data
 
-def main():
-    # CPU usage
+def get_computer_status():
+     # CPU usage
     print("CPU Usage:")
     cpu_data = get_cpu_usage()
     print(tabulate([cpu_data], headers="keys", tablefmt="grid"))
@@ -81,6 +85,38 @@ def main():
     gpu_data = get_gpu_usage()
     print(tabulate(gpu_data, headers="keys", tablefmt="grid"))  # 由于可能有多个GPU，所以这里直接打印所有GPU的信息
 
+# env path tools
+def show_env_var(env_var_name=None):
+    if env_var_name != None:
+        value= os.environ.get(env_var_name)
+        if value:
+            print(f"{env_var_name}={value}")
+        else:
+            print(f"环境变量 '{env_var_name}' 不存在")
+    else:
+        print(f"----------OS env variables----------")
+        # 计算最长的环境变量名的长度
+        max_len = max(len(key) for key in os.environ.keys())
+        
+        # 打印每个环境变量，使用动态宽度对齐等号
+        for key, value in os.environ.items():
+            print(f"{key.ljust(max_len)} = {value}")
+
+def add_env_var(env_var_name, env_var_value, user_scope=True):
+    scope_flag = '/M' if not user_scope else ''
+
+    try:
+        command = f'setx {env_var_name} "{env_var_value}" {scope_flag}'
+
+        subprocess.run(command, shell=True, check=True)
+        print(f"env var '{env_var_name}' added successfully, value: {env_var_value}")
+        
+    except subprocess.CalledProcessError as e:
+        print(f"error: {e}")
+
+        
+def main():
+    pass
 if __name__ == "__main__":
     main()
 
