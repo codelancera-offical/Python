@@ -13,11 +13,11 @@ class BinaryTree():
         self.key = obj
         return True
 
-    def get_left_child():
-        pass
+    def get_left_child(self):
+        return self.left_child
 
-    def get_right_child():
-        pass
+    def get_right_child(self):
+        return self.right_child
 
     def insert_left(self, obj):
         if self.left_child is None:

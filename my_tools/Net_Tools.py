@@ -1,5 +1,6 @@
 import subprocess
 import re
+import pathlib
 import socket
 
 def get_ip_on_linux():
@@ -14,12 +15,10 @@ def get_ip_on_linux():
         return "No IP address found for wlan0"
 
     
-def connect_to_termux(host=None):
+def connect_ssh(host=None, port=8022, username="u0_a53"):
     private_key_path = r"C:\Users\30752\.ssh\id_rsa"
-    username = "u0_a53"
     if host == None:
-        host = input("please enter termux's ip: ")
-    port = 8022
+        host = input("please enter host's ip: ")
 
     # build ssh connect command
     command = [
@@ -34,8 +33,33 @@ def connect_to_termux(host=None):
     except subprocess.CalledProcessError as e:
         print(f"SSH connect failed: {e}")
     
-def get_ip_range(interface='wlan0'):
-    pass
+def transer_scp(host=None, port=8022, username="u0_a53", local_file_path=None, remote_file_path=None):
+    if host == None:
+        host = input("pleaes enter host's ip")
+    if local_file_path == None:
+        local_file_path = input("please enter local file path")
+    if remote_file_path == None:
+        remote_file_path = input("please enter local file path")
+
+    command = [
+        "scp",
+        "-P", str(port),
+        local_file_path,
+        f"{username}@{host}:{remote_file_path}"
+    ]
+    
+    try:
+        subprocess.run(command, check=True)
+        print(f"File {local_file_path} has been successfully transferred to {remote_file_path}.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error: {e}")
+
+
+
+
+
+
+
 def main():
     functions = {
         "0": get_ip_on_linux,
