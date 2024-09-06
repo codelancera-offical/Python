@@ -35,4 +35,4 @@ class HashTable_linear_probing:
 
         position = start_slot
         while self._slots[position] is not None:
-            if 
+            if
