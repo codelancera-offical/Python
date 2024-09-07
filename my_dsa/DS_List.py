@@ -1,15 +1,22 @@
-
+from my_math.Probability import *
 class List():
 
     # magic methods to cooperate with python inner functions and operators
-    def __init__(self, lst=None):
+    def __init__(self, lst=None, random=False, **kwargs):
         if lst == None:
-            self.lst = []
+            if random == False:
+                self.lst = []
+            elif random == True:
+                self.lst = []
+                low = kwargs.get('low', 0)
+                high = kwargs.get('high', 10)
+                n = kwargs.get('n', 10)
+                for i in range(n):
+                    self.lst.append(generate_random_int(low=low, high=high))
         elif isinstance(lst, list):
-            self.lst = lst
+            self.lst = lst.copy()
         else:
             raise TypeError("init error: please input a python list to init.")
-
 
     def __len__(self):
         return len(self.lst)
@@ -70,7 +77,7 @@ class List():
         return self.lst.index(value)
     
     @staticmethod
-    def max_index(lst):
+    def max_index(lst): # OK
         max_index = 0
         max_item = lst[0]
 
@@ -82,12 +89,12 @@ class List():
         return max_index
         
     @staticmethod
-    def min_index(lst):
+    def min_index(lst): # OK
         min_index = 0
         min_item = lst[0]
 
         for i in range(1, len(lst)):
-            if min_item < lst[i]:
+            if min_item > lst[i]:
                 min_index = i
                 min_item = lst[i]
 
@@ -106,14 +113,16 @@ class List():
     def clear(self):
         self.lst.clear()
 
-    def flip(self, k):
+    def flip(self, k):  # OK
         return self.lst[:k][::-1] + self.lst[k:]
     
     def reverse(self):
         self.lst = self.lst.reverse()
 
+    def copy(self):
+        return List(self.lst)
     # search algorithm
-    def binary_search(lst, item, rec=False):
+    def binary_search(lst, item, rec=False):    # Modifying
 
         if rec == True:
             if len(lst) == 0:
@@ -142,7 +151,7 @@ class List():
         
             return False
     
-    def ternary_search(lst, item, rec=False):
+    def ternary_search(lst, item, rec=False):   # Modifying
 
         if rec == True:
             if len(lst) == 0:
@@ -183,47 +192,131 @@ class List():
     # sort algorithm
 
     ## O(n^2) sort aloritem
-    def frisbee_sort(self):
-        n = len(self.lst)
-        for size in range(n, 1, -1):
-            max_index = self.lst.index(max(self.lst[:size]))
+    def frisbee_sort(self, desc=False) -> None: # OK
+        if desc == False:
+            n = len(self.lst)
+            for size in range(n, 1, -1):
+                max_index = self.lst.index(max(self.lst[:size]))
 
-            if max_index != size - 1:
-                if max_index != 0:
-                    self.lst = List.flip(self, max_index + 1)
+                if max_index != size - 1:
+                    if max_index != 0:
+                        self.lst = List.flip(self, max_index + 1)
+                    
+                    self.lst = List.flip(self, size)
+        elif desc == True:
+            n = len(self.lst)
+            for size in range(n, 1, -1):
+                min_index = self.min_index(self.lst[:size])
+
+                if min_index != size - 1:
+                    if min_index != 0:
+                        self.lst = List.flip(self, min_index + 1)
+
+                    self.lst = List.flip(self, size)
+
+    def select_sort(self, desc=False):  # OK
+        if desc == False:
+            n = len(self.lst)
+            for size in range(n, 1, -1):
+                max_index = self.max_index(self.lst[:size])
                 
-                self.lst = List.flip(self, size)
+                temp = self.lst[size-1]
+                self.lst[size-1] = self.lst[max_index]
+                self.lst[max_index] = temp
+        elif desc == True:
+            n = len(self.lst)
+            for size in range(n, 1, -1):
+                min_index = self.min_index(self.lst[:size])
 
-    def select_sort(self):
+                temp = self.lst[size - 1]
+                self.lst[size - 1] = self.lst[min_index]
+                self.lst[min_index] = temp
+
+    def bubble_sort(self, desc=False) -> None:  # OK
+        if desc == False:
+            n = len(self.lst)
+            for i in range(n-1, 0, -1):
+                for j in range(i):
+                    if self.lst[j] > self.lst[j + 1]:
+                        temp = self.lst[j]
+                        self.lst[j] = self.lst[j+1]
+                        self.lst[j+1] = temp
+
+        elif desc == True:
+            n = len(self.lst)
+            for i in range(n-1):
+                for j in range(n-1, i, -1):
+                    if self.lst[j] > self.lst[j - 1]:
+                        temp = self.lst[j]
+                        self.lst[j] = self.lst[j - 1]
+                        self.lst[j-1] = temp
+
+    def insert_sort(self, desc=False) -> None:  # OK
         n = len(self.lst)
-        for size in range(n, 1, -1):
 
-            max_index = self.max_index(self.lst[:size])
-            
-            temp = self.lst[size-1]
-            self.lst[size-1] = self.lst[max_index]
-            self.lst[max_index] = temp
+        if desc == False:
+            for i in range(1, n):
+                cur_val = self.lst[i]
+                cur_pos = i
 
-    def bubble_sort(self):
-        for i in range(len(self.lst)-1, 0, -1):
-            for j in range(i):
-                if self.lst[j] > self.lst[j + 1]:
-                    temp = self.lst[j]
-                    self.lst[j] = self.lst[j+1]
-                    self.lst[j+1] = temp
-                
-    def insert_sort():
-        pass
+                while cur_pos > 0 and self.lst[cur_pos - 1] > cur_val:
+                    self.lst[cur_pos] = self.lst[cur_pos - 1]
+                    cur_pos -= 1
+                self.lst[cur_pos] = cur_val
 
-    ## Faster algorithm(usually O(nlogn)
+        elif desc == True:
+            for i in range(1, n):
+                cur_val = self.lst[i]
+                cur_pos = i
+
+                while cur_pos > 0 and self.lst[cur_pos - 1] < cur_val:
+                    self.lst[cur_pos] = self.lst[cur_pos - 1]
+                    cur_pos -= 1
+                self.lst[cur_pos] = cur_val
+
+    ## Faster algorithm (usually O(nlogn) or less than O(n^2)) 
     def merge_sort():
         pass
 
     def quick_sort():
         pass
         
-    def shell_sort():
-        pass
+    def shell_sort(self, desc=False):   # modifying
+        """
+        improvement of insert_sort
+        using the advantage of insert_sort that the more order the list is, the faster the algorithm will be.
+        best: O(n)
+        worst: O(n^2)
+        average: O(n^1.3)
+        """
+        def gap_insertion_sort(lst, start, gap, desc):
+            if desc == False:
+                for i in range(start + gap, len(lst), gap):
+                    cur_val = lst[i]
+                    cur_pos = i
+                    while cur_pos >= gap and lst[cur_pos - gap] > cur_val:
+                        lst[cur_pos] = lst[cur_pos - gap]
+                        cur_pos = cur_pos - gap
+                    lst[cur_pos] = cur_val
+            elif desc == True:
+                for i in range(start + gap, len(lst), gap):
+                    cur_val = lst[i]
+                    cur_pos = i
+                    while cur_pos >= gap and lst[cur_pos - gap] < cur_val:
+                        lst[cur_pos] = lst[cur_pos - gap]
+                        cur_pos = cur_pos - gap
+                    lst[cur_pos] = cur_val
+ 
+        sublist_count = len(self.lst) // 2
+        while sublist_count > 0:
+            for pos_start in range(sublist_count):
+                gap_insertion_sort(self.lst, pos_start, sublist_count, desc)
+            # print("After increments of size", sublist_count, "the list is ", self.lst)
+            sublist_count = sublist_count // 2
+        
+        print(self.lst)
+
+
 
 
 
