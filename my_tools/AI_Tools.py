@@ -1,11 +1,13 @@
 from openai import OpenAI
 from colorama import Fore
 from my_tools.IO_Tools import print_slowly
-from my_tools.Encode_Tools import encode_image
 import webbrowser
 import os
 import requests
+import jieba
+from collections import Counter
 
+# ChatGPT-Tools
 def generate_text(choose_model="gpt-4o-mini", user_input="Randomly tell me something, news, jokes, movie recommendations, or some terminal or computer tricks, just like the start screen of windows."):
     client = OpenAI()
 
@@ -140,3 +142,12 @@ def view_image(url=None, image_path=None, usr_input="View the image, and try to 
             print(Fore.GREEN + "---------------------------------")
 
 
+# NLP-Tools
+def get_most_frequent_word(text:str):
+    words = jieba.lcut(text)
+
+    word_counts = Counter(words)
+
+    most_frequent_word, frequency = word_counts.most_common(1)[0]
+
+    return most_frequent_word, frequency
