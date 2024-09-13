@@ -1,4 +1,6 @@
 from my_math.Probability import *
+
+
 class List():
 
     # magic methods to cooperate with python inner functions and operators
@@ -275,11 +277,63 @@ class List():
                 self.lst[cur_pos] = cur_val
 
     ## Faster algorithm (usually O(nlogn) or less than O(n^2)) 
-    def merge_sort():
-        pass
+    def merge_sort(self):   # OK
+        def mergeSort(lst):
+            if len(lst) > 1:
+                mid = len(lst) // 2
+                left_half = lst[:mid]
+                right_half = lst[mid:]
 
-    def quick_sort():
-        pass
+                mergeSort(left_half)
+                mergeSort(right_half)
+
+                i, j, k = 0, 0, 0
+
+                while i < len(left_half) and j < len(right_half):
+                    if left_half[i] <= right_half[j]:
+                        lst[k] = left_half[i]
+                        i += 1
+                    else:
+                        lst[k] = right_half[j]
+                        j += 1
+                    k += 1
+
+                while i < len(left_half):
+                    lst[k] = left_half[i]
+                    i += 1
+                    k += 1
+                
+                while j < len(right_half):
+                    lst[k] = right_half[j]
+                    j += 1
+                    k += 1
+
+        mergeSort(self.lst)
+
+    def quick_sort(self):
+        def quickSort(lst):
+            def partition(lst, first, last):
+                pivot_val = lst[first]
+                left_mark = first + 1
+                right_mark = last
+                done = False
+
+                while not done:
+                    while left_mark <= right_mark and lst[left_mark] <= pivot_val:
+                        left_mark += 1
+
+                    while left_mark <= right_mark and lst[right_mark] >= pivot_val:
+                        right_mark -= right_mark
+
+                    if right_mark < left_mark:
+                        done = True
+                    
+                    else:
+                        lst[left_mark], a
+            def quickSort_helper(lst, first, last):
+                if first < last:
+                    split = partition(lst, )
+
         
     def shell_sort(self, desc=False):   # modifying
         """
